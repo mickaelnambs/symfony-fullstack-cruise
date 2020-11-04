@@ -5,6 +5,9 @@ namespace App\Controller\Front;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * Class HomeController.
+ */
 class HomeController extends AbstractController
 {
     /**
