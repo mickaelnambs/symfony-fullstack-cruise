@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Nos magnifiques annonces{% endblock %}
+
+{% block body %}
+    <div class="container p-4">
+        <h1>Voici les annonces !</h1>
+
+        <div class="row">
+            {% for ad in ads %}
+                {% include 'ad/_ad.html.twig' %}
+            {% endfor %}
+        </div>
+        {# {{ pagination.display() }} #}
+    </div>
+{% endblock %}

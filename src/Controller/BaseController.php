@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Image;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\File;
 
 /**
  * Class BaseController.
@@ -12,16 +13,16 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class BaseController extends AbstractController
 {
     /** @var EntityManagerInterface */
-    protected EntityManagerInterface $entityManager;
+    protected EntityManagerInterface $em;
 
     /**
      * BaseController constructor.
      *
-     * @param EntityManagerInterface $entityManager
+     * @param EntityManagerInterface $em
      */
     public function __construct(EntityManagerInterface $entityManager)
     {
-        $this->entityManager = $entityManager;
+        $this->em = $entityManager;
     }
 
     /**
@@ -33,9 +34,9 @@ class BaseController extends AbstractController
     {
         try {
             if (!$object->getId()) {
-                $this->entityManager->persist($object);
+                $this->em->persist($object);
             }
-            $this->entityManager->flush();
+            $this->em->flush();
 
             return true;
         } catch (\Exception $e) {
@@ -52,14 +53,29 @@ class BaseController extends AbstractController
     {
         try {
             if ($object) {
-                $this->entityManager->remove($object);
+                $this->em->remove($object);
             }
-            $this->entityManager->flush();
+            $this->em->flush();
 
             return true;
         } catch (\Exception $e) {
             return false;
         }
+    }
+
+    /**
+     * @param File $file
+     * @param object $object
+     * 
+     * @return object
+     */
+    public function uploadFile(File $file, object $object): object
+    {
+        $filename = bin2hex(random_bytes(6)) . '.' . $file->guessExtension();
+        $file->move($this->getParameter('image_directory'), $filename);
+        $object->setImage($filename);
+
+        return $object;
     }
 
     /**

@@ -78,11 +78,21 @@ class User implements UserInterface
      */
     private $bookings;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $image;
+
     public function __construct()
     {
         $this->city = new ArrayCollection();
         $this->ads = new ArrayCollection();
         $this->bookings = new ArrayCollection();
+    }
+
+    public function fullName()
+    {
+        return $this->getFirstName().' '.$this->getLastName();
     }
 
     public function getId(): ?int
@@ -324,6 +334,18 @@ class User implements UserInterface
                 $booking->setBooker(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getImage(): ?string
+    {
+        return $this->image;
+    }
+
+    public function setImage(string $image): self
+    {
+        $this->image = $image;
 
         return $this;
     }

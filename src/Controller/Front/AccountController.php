@@ -3,6 +3,7 @@
 namespace App\Controller\Front;
 
 use App\Entity\User;
+use App\Form\ProfileType;
 use App\Form\RegistrationType;
 use App\Constant\MessageConstant;
 use App\Controller\BaseController;
@@ -10,8 +11,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
  * Class AccountController.
@@ -27,9 +29,9 @@ class AccountController extends BaseController
      * @param EntityManagerInterface $entityManager
      * @param UserPasswordEncoderInterface $passwordEncoder
      */
-    public function __construct(EntityManagerInterface $entityManager, UserPasswordEncoderInterface $passwordEncoder)
+    public function __construct(EntityManagerInterface $em, UserPasswordEncoderInterface $passwordEncoder)
     {
-        parent::__construct($entityManager);
+        parent::__construct($em);
         $this->passwordEncoder = $passwordEncoder;
     }
 
@@ -48,14 +50,16 @@ class AccountController extends BaseController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $hash = $this->passwordEncoder->encodePassword($user, $user->getPassword());
-            $user->setPassword($hash);
-
-            $this->save($user);
-            $this->addFlash(
-                MessageConstant::SUCCESS_TYPE,
-                "Votre compte a bien été créé ! Vous pouvez maintenant vous connecter !"
-            );
+            $file = $form->get('image')->getData();
+            $this->uploadFile($file, $user);
+            $user->setPassword($this->passwordEncoder->encodePassword($user, $user->getPassword()));
+            
+            if ($this->save($user)) {
+                $this->addFlash(
+                    MessageConstant::SUCCESS_TYPE,
+                    "Votre compte a bien été créé ! Vous pouvez maintenant vous connecter !"
+                );
+            }
             return $this->redirectToRoute('account_login');
         }
         return $this->render('account/registration.html.twig', [
@@ -89,5 +93,50 @@ class AccountController extends BaseController
     public function logout()
     {
         // Vide ..
+    }
+
+    /**
+     * Permet de modifier le profil.
+     * 
+     * @Route("/account/profile", name="account_profile", methods={"POST","GET"})
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function profile(Request $request): Response
+    {
+        $user = $this->getUser();
+        $form = $this->createForm(ProfileType::class, $user);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $file = $form->get('image')->getData();
+            $this->uploadFile($file, $user);
+
+            if ($this->save($user)) {
+                $this->addFlash(
+                    'success',
+                    "Les données du profil ont été enregistrée avec succès !"
+                );
+            }
+        }
+        return $this->render('account/profile.html.twig', [
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * Permet d'afficher le profil de l'utilisateur connecté.
+     *
+     * @Route("/account", name="account_index")
+     * @IsGranted("ROLE_USER")
+     * 
+     * @return Response
+     */
+    public function myAccount(): Response
+    {
+        return $this->render('account/index.html.twig', [
+            'user' => $this->getUser(),
+        ]);
     }
 }

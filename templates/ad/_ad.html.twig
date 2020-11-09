@@ -1,0 +1,30 @@
+{% set url = path('ad_show', {slug: ad.slug}) %}
+
+<div class="col-md-4">
+    <div class="card bg-light mb-3">
+        <div class="card-header text-center">
+            {{ ad.place }} places, <strong>{{ ad.price | number_format(0, '', ' ') }} Ar</strong> <br>
+        </div>
+        {% for image in ad.images %}    
+            <a href="{{ url }}">
+                <img src="{{asset('uploads/' ~ image.name)}}" alt="Image de l'appartement" style="height: 200px; width: 100%; display: block">
+            </a>
+        {% endfor %}
+
+        <div class="card-body">
+            <h4 class="card-title">
+                <a href="{{ url }}">
+                    {{ ad.name }}
+                </a>
+            </h4>
+            <p class="card-text">
+                {{ ad.description }}
+            </p>
+            <a href="{{ url }}" class="btn btn-primary float-right">En savoir plus !</a>
+
+            {% if app.user and app.user == ad.user %}
+                <a href="{{ path('ad_edit', {'id': ad.id}) }}" class="btn btn-secondary">Modifier !</a>
+            {% endif %}
+        </div>
+    </div>
+</div>

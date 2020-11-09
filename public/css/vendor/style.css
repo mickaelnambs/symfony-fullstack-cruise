@@ -75,24 +75,24 @@ h1, h2, h3, h4, h5,
     box-shadow: none !important; }
   .btn.btn-black {
     border-width: 2px;
-    border-color: #2C3E50;
-    background: #2C3E50;
+    border-color: #78C2AD;
+    background: #78C2AD;
     color: #fff; }
     .btn.btn-black:hover {
-      color: #2C3E50;
+      color: #78C2AD;
       background-color: transparent; }
     .btn.btn-black.btn-outline-black {
-      color: #2C3E50;
+      color: #78C2AD;
       background-color: transparent; }
       .btn.btn-black.btn-outline-black:hover {
-        border-color: #2C3E50;
-        background: #2C3E50;
+        border-color: #78C2AD;
+        background: #78C2AD;
         color: #fff; }
   .btn.btn-white {
     border-width: 2px;
     border-color: #fff;
     background: #fff;
-    color: #2C3E50;
+    color: #78C2AD;
     }
     .btn.btn-white:hover {
       color: #fff;
@@ -103,7 +103,7 @@ h1, h2, h3, h4, h5,
       .btn.btn-white.btn-outline-white:hover {
         border-color: #fff;
         background: #fff;
-        color: #2C3E50;
+        color: #78C2AD;
         }
 
 .line-height-1 {
@@ -116,7 +116,7 @@ h1, h2, h3, h4, h5,
   height: 43px;
   font-family: "Muli", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"; }
   .form-control:active, .form-control:focus {
-    border-color: #2C3E50; } #2C3E50;
+    border-color: #78C2AD; } #78C2AD;
   .form-control:hover, .form-control:active, .form-control:focus {
     -webkit-box-shadow: none !important;
     box-shadow: none !important; }

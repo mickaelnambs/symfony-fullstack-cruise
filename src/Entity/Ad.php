@@ -3,12 +3,14 @@
 namespace App\Entity;
 
 use App\Repository\AdRepository;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=AdRepository::class)
+ * @ORM\HasLifecycleCallbacks
  */
 class Ad
 {
@@ -23,11 +25,16 @@ class Ad
      * @ORM\Column(type="string", length=255)
      */
     private $name;
-
+    
     /**
      * @ORM\Column(type="integer")
      */
     private $price;
+    
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $place;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -35,10 +42,16 @@ class Ad
     private $description;
 
     /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $slug;
+
+    /**
      * @ORM\Column(type="datetime")
      */
     private $createdAt;
-
+    
+    
     /**
      * @ORM\ManyToOne(targetEntity=City::class, inversedBy="ads")
      * @ORM\JoinColumn(nullable=false)
@@ -46,7 +59,7 @@ class Ad
     private $city;
 
     /**
-     * @ORM\OneToMany(targetEntity=Image::class, mappedBy="ad")
+     * @ORM\OneToMany(targetEntity=Image::class, mappedBy="ad", cascade={"persist", "remove"})
      */
     private $images;
 
@@ -65,6 +78,18 @@ class Ad
     {
         $this->images = new ArrayCollection();
         $this->bookings = new ArrayCollection();
+    }
+
+    /**
+     * Permet d'initialiser !
+     *
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     * 
+     * @return void
+     */
+    public function initializeSlug() {
+        $this->createdAt = new DateTime();
     }
 
     public function getId(): ?int
@@ -202,6 +227,30 @@ class Ad
                 $booking->setAd(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPlace(): ?int
+    {
+        return $this->place;
+    }
+
+    public function setPlace(int $place): self
+    {
+        $this->place = $place;
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
 
         return $this;
     }
