@@ -20,9 +20,9 @@ class BaseController extends AbstractController
      *
      * @param EntityManagerInterface $em
      */
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(EntityManagerInterface $em)
     {
-        $this->em = $entityManager;
+        $this->em = $em;
     }
 
     /**
