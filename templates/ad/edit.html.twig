@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modification d'une annonce
+{% endblock %}
+
+{% block body %}
+
+	<div class="container mt-4">
+		{{ form_start(form) }}
+	
+		<div class="row">
+			<div class="col">
+				<div class="alert alert-light">
+					<h2>Informations générales</h2>
+					<hr>
+					{{ form_row(form.name) }}
+					{{ form_row(form.price) }}
+					{{ form_row(form.place) }}
+				</div>
+				<div class="alert alert-light">
+					<h2>Détails de l'annonce</h2>
+					<hr>
+                    {{ form_row(form.city) }}
+					{{ form_row(form.description) }}
+				</div>
+			</div>
+			<div class="col">
+				<div class="alert alert-light">
+					<h2>Images de l'annonce</h2>
+					{{ form_row(form.images) }}
+					<hr>
+					<button type="submit" class="btn btn-success">
+						<i class="fa fa-save"></i>
+						Sauvegarder
+					</button>
+				</div>
+			</div>
+		</div>
+		{{ form_end(form) }}
+	</div>
+
+{% endblock %}

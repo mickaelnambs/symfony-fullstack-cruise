@@ -72,10 +72,11 @@ class AdminAdController extends BaseController
                     "L'annonce <strong>{$ad->getName()}</strong> a bien été sauvegardée !"
                 );
             }
-            return $this->render('admin/ad/new.html.twig', [
-                'form' => $form->createView()
-            ]);
+            return $this->redirectToRoute('admin_ad_index');
         }
+        return $this->render('admin/ad/new.html.twig', [
+            'form' => $form->createView()
+        ]);
     }
 
     /**
@@ -103,10 +104,11 @@ class AdminAdController extends BaseController
                     "L'annonce <strong>{$ad->getName()}</strong> a bien été modifiée !"
                 );
             }
-            return $this->render('admin/ad/edit.html.twig', [
-                'form' => $form->createView()
-            ]);
+            return $this->redirectToRoute('admin_ad_index');
         }
+        return $this->render('admin/ad/edit.html.twig', [
+            'form' => $form->createView()
+        ]);
     }
 
     /**
