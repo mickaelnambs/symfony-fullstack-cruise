@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Réserver l'annonce : {{ad.name}} !{% endblock %}
+{% block body %}
+    <div class="container mt-4 mb-4">
+        {% for message in app.flashes('error') %}
+            <div class="alert alert-warning">
+                {{ message }}
+            </div>
+        {% endfor %}
+        <h1>Réservez pour l'annonce : <em>{{ ad.name }}</em></h1>
+
+        <p>Vous êtes sur le point de réserver le bien de <strong>{{ ad.user.fullName }}</strong>, dites nous tout, on s'occupe du reste !</p>
+
+        {{ form_start(form) }}
+        <div class="alert alert-light">
+            <div class="row">
+                <div class="col">
+                    {{form_row(form.place)}}
+                </div>
+            </div>
+            <h4 class="mt-2">Frais: <span id="amount">{{ad.price | number_format(0, '', ' ')}}</span> Ar par personne</h4>
+
+            <h4 class="mt-3">Vous avez un commentaire ?</h4>
+            {{ form_row(form.comment) }}
+        </div>
+
+
+        <h2>Vous avez terminé !</h2>
+
+        <button type="submit" class="btn btn-success">Je réserve !</button>
+
+        {{form_end(form)}}
+    
+    </div>
+{% endblock %}

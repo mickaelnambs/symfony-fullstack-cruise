@@ -3,7 +3,8 @@
 <div class="col-md-4">
     <div class="card bg-light mb-3">
         <div class="card-header text-center">
-            {{ ad.place }} places, <strong>{{ ad.price | number_format(0, '', ' ') }} Ar</strong> <br>
+            {{ ad.place }} places<br>
+            <strong>Frais </strong>{{ ad.price | number_format(0, '', ' ') }} Ar
         </div>
         {% for image in ad.images %}    
             <a href="{{ url }}">

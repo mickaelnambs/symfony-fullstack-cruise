@@ -128,7 +128,7 @@ class AccountController extends BaseController
     /**
      * Permet d'afficher le profil de l'utilisateur connecté.
      *
-     * @Route("/account", name="account_index")
+     * @Route("/account", name="user_show")
      * @IsGranted("ROLE_USER")
      * 
      * @return Response

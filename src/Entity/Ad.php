@@ -74,10 +74,34 @@ class Ad
      */
     private $bookings;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="ad")
+     */
+    private $comments;
+
     public function __construct()
     {
         $this->images = new ArrayCollection();
         $this->bookings = new ArrayCollection();
+        $this->comments = new ArrayCollection();
+    }
+
+    /**
+     * Permet de savoir les places disponibles.
+     *
+     * @return integer
+     */
+    public function getAvailablePlaces()
+    {
+        $availablePlaces = $this->getPlace();
+        foreach ($this->bookings as $booking) {
+            $availablePlaces -= $booking->getPlace();
+            if ($availablePlaces <= 0) {
+                return 0;
+            }
+        }
+        
+        return $availablePlaces;
     }
 
     /**
@@ -251,6 +275,37 @@ class Ad
     public function setSlug(string $slug): self
     {
         $this->slug = $slug;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Comment[]
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setAd($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): self
+    {
+        if ($this->comments->contains($comment)) {
+            $this->comments->removeElement($comment);
+            // set the owning side to null (unless already changed)
+            if ($comment->getAd() === $this) {
+                $comment->setAd(null);
+            }
+        }
 
         return $this;
     }

@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+{% block title %}{% endblock %}
+{% block body %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-7 mb-3">
+            <h1>{{ad.name}} ({{ ad.city.name}})</h1>
+            <p class="h2">
+                {{ ad.place }} places<br>
+                <strong>Frais </strong>{{ ad.price | number_format(0, '', ' ') }} Ar
+            </p>
+            {% if app.user %}            
+                <a href="{{ path('booking_new', {'id': ad.id}) }}" class="btn btn-primary">Réserver !</a>
+            {% endif %}
+            {% if app.user and app.user == ad.user %}
+                <a href="{{ path('ad_edit', {'id': ad.id}) }}" class="btn btn-secondary">Modifier l'annonce</a>
+                <a href="{{ path('ad_delete', {'id': ad.id}) }}" class="btn btn-danger" onclick="return confirm(`Êtes vous sur de vouloir supprimer l'annonce : {{ad.name}} ?`)">Supprimer l'annonce</a>
+            {% endif %}
+            <hr>
+            <section class="mt-2">
+                <article class="mb-3">
+                    <div class="content">
+                        {% for image in ad.images %}
+                            <img src="{{ asset('uploads/' ~ image.name ) }}" alt="image" style="width: 620px; height: 550px;">
+                        {% endfor %}
+                    </div>
+                </article>
+            </section>
+            <hr>
+        </div>
+        <div class="col-5">
+            {% set a = ad.user %}
+            <div class="row mb-3 align-items-center">
+                <div class="col-5">
+                    <a href="{{ path('user_show', {'id': a.id}) }}">
+                        <img src="{{ asset('uploads/' ~ a.image ) }}" class="avatar mb-3"  alt="Avatar de {{a.fullName}}">
+                    </a>
+                </div>
+                <div class="col-7">
+                    <a href="{{ path('user_show', {'id': a.id}) }}">
+                        <h3>{{a.fullName}}</h3>
+                    </a>
+                    <span class="badge badge-primary">{{a.ads | length}} annonces</span>
+                </div>
+            </div>
+            {{ a.description | raw }}
+        </div>
+    </div>
+</div>
+{% endblock %}

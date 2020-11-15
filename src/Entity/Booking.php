@@ -3,10 +3,12 @@
 namespace App\Entity;
 
 use App\Repository\BookingRepository;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass=BookingRepository::class)
+ * @ORM\HasLifecycleCallbacks()
  */
 class Booking
 {
@@ -16,16 +18,6 @@ class Booking
      * @ORM\Column(type="integer")
      */
     private $id;
-
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    private $startDate;
-
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    private $endDate;
 
     /**
      * @ORM\Column(type="integer")
@@ -54,33 +46,34 @@ class Booking
      */
     private $createdAt;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $place;
+
+    /**
+     * Callback appelé à chaque fois qu'on créé une réservation.
+     *
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     * 
+     * @return void
+     */
+    public function prePersist()
+    {
+        if (empty($this->createdAt)) {
+            $this->createdAt = new DateTime();
+        }
+
+        if (empty($this->amount)) {
+            // prix de l'annonce * nombre de place réservé.
+            $this->amount = $this->getAd()->getPrice() * $this->getPlace();
+        }
+    }
+
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getStartDate(): ?\DateTimeInterface
-    {
-        return $this->startDate;
-    }
-
-    public function setStartDate(\DateTimeInterface $startDate): self
-    {
-        $this->startDate = $startDate;
-
-        return $this;
-    }
-
-    public function getEndDate(): ?\DateTimeInterface
-    {
-        return $this->endDate;
-    }
-
-    public function setEndDate(\DateTimeInterface $endDate): self
-    {
-        $this->endDate = $endDate;
-
-        return $this;
     }
 
     public function getAmount(): ?int
@@ -139,6 +132,18 @@ class Booking
     public function setCreatedAt(\DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getPlace(): ?int
+    {
+        return $this->place;
+    }
+
+    public function setPlace(int $place): self
+    {
+        $this->place = $place;
 
         return $this;
     }
